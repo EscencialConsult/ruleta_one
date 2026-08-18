@@ -15,7 +15,8 @@
   body {
     font-family: "Segoe UI", system-ui, -apple-system, Roboto, sans-serif;
     background: radial-gradient(1100px 700px at 78% -12%, #f3ecfb 0%, var(--bg) 55%);
-    color: var(--text); min-height: 100%; overflow-x: hidden;
+    color: var(--text); min-height: 100vh; overflow-x: hidden;
+    display: flex; flex-direction: column;
   }
   .app { max-width: 1150px; margin: 0 auto; padding: 22px 18px 60px; }
 
@@ -132,7 +133,19 @@
 
   /* ===== Fondo animado ===== */
   .bg-fx { position: fixed; inset: 0; overflow: hidden; z-index: 0; pointer-events: none; }
-  .app { position: relative; z-index: 1; }
+  .app { position: relative; z-index: 1; flex: 1 0 auto; width: 100%; }
+
+  /* Pie de página */
+  .site-footer { position: relative; z-index: 1; flex-shrink: 0; background: #1a181d; color: #c6c9d7; }
+  .site-footer::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+    background: linear-gradient(90deg, var(--pink), var(--accent), var(--cyan)); }
+  .foot-inner { max-width: 1150px; margin: 0 auto; padding: 15px 18px;
+    display: flex; align-items: center; justify-content: space-between; gap: 14px; flex-wrap: wrap; }
+  .foot-left, .foot-right { display: flex; align-items: center; gap: 10px; font-size: 12.5px; color: #a4a8c0; }
+  .foot-logo { height: 20px; width: auto; display: block; }
+  @media (max-width: 560px) {
+    .foot-inner { flex-direction: column; text-align: center; gap: 10px; }
+  }
   .blob { position: absolute; border-radius: 50%; filter: blur(70px); opacity: .30; will-change: transform; }
   .blob.b1 { width: 540px; height: 540px; left: -140px; top: -120px;
     background: radial-gradient(circle at 50% 50%, var(--accent), transparent 70%); animation: drift1 28s ease-in-out infinite; }
@@ -366,8 +379,20 @@
     </div>
   </section>
 
-  <p class="footnote">Ruleta Virtual · Cada ruleta y sus participantes quedan guardados de forma segura.</p>
 </div>
+
+<footer class="site-footer">
+  <div class="foot-inner">
+    <div class="foot-left">
+      <img src="img/logo.png" class="foot-logo" alt="ONE" />
+      <span>| Todos los derechos reservados. © 2026 - V1.0.1</span>
+    </div>
+    <div class="foot-right">
+      <span>Desarrollado por</span>
+      <img src="img/logo.png" class="foot-logo" alt="ONE" />
+    </div>
+  </div>
+</footer>
 
 <div class="overlay" id="overlay">
   <div class="modal">
