@@ -132,14 +132,33 @@
   .dot.ok { background: var(--accent-2); } .dot.bad { background: var(--danger); }
 
   /* ===== Código QR ===== */
-  .qr-block { display: flex; flex-direction: column; align-items: center; gap: 9px; margin-top: 18px; }
-  .qr-card-img { background: #fff; padding: 10px; border-radius: 12px; border: 1px solid var(--line);
-    box-shadow: 0 6px 16px rgba(26,24,29,.08); line-height: 0; }
-  .qr-canvas { display: block; width: 170px; height: 170px; image-rendering: pixelated; }
-  .qr-caption { color: var(--text); font-size: 13.5px; font-weight: 600; text-align: center; max-width: 230px; }
+  .qr-block { display: flex; flex-direction: column; align-items: center; gap: 12px; }
+  /* Cuadrado completo, esquinas rectas, borde fino y sombra suave.
+     border-radius:0 anula el selector global "canvas{border-radius:50%}" de la ruleta. */
+  .qr-canvas { display: block; background: #fff; border: 1px solid var(--line);
+    border-radius: 0; cursor: default; box-shadow: 0 8px 22px rgba(26,24,29,.12); }
+  #playQr { margin-top: 30px; }
+  #playQr .qr-canvas { width: 240px; height: 240px; }
+  .qr-caption { color: var(--text); font-size: 16px; font-weight: 700; text-align: center; max-width: 320px; }
   .qr-admin-preview { display: flex; justify-content: center; margin-top: 14px; }
-  .qr-admin-preview .qr-canvas { width: 160px; height: 160px; }
-  @media (max-width: 560px) { .qr-canvas { width: 150px; height: 150px; } }
+  .qr-admin-preview .qr-canvas { width: 170px; height: 170px; }
+
+  /* ===== Vista de juego / Totem ===== */
+  /* Ruleta más grande cuando se muestra sola (sin formulario) */
+  .play-layout.no-form { max-width: 620px; }
+  .play-layout.no-form .wheel-wrap { max-width: 520px; }
+  /* Pantalla vertical grande (totem): agranda y reparte el alto para no dejar blanco abajo */
+  @media (orientation: portrait) and (min-width: 700px) {
+    #view-play #playContent { display: flex; flex-direction: column; justify-content: center;
+      min-height: calc(100vh - 160px); }
+    .play-layout.no-form { max-width: 680px; }
+    .play-layout.no-form .wheel-wrap { max-width: 580px; }
+    #playTitle { font-size: 30px; }
+    #playEvent { font-size: 16px; }
+    #playQr { margin-top: 52px; }
+    #playQr .qr-canvas { width: 300px; height: 300px; }
+    .qr-caption { font-size: 19px; max-width: 380px; }
+  }
 
   /* ===== Fondo animado ===== */
   .bg-fx { position: fixed; inset: 0; overflow: hidden; z-index: 0; pointer-events: none; }
@@ -352,7 +371,7 @@
           <label>Texto debajo del QR (opcional)</label>
           <input type="text" id="qrCaption" placeholder="Escaneá para más información" />
           <div class="qr-admin-preview" id="qrAdminPreview">
-            <div class="qr-card-img"><canvas id="qrPreviewCanvas" class="qr-canvas"></canvas></div>
+            <canvas id="qrPreviewCanvas" class="qr-canvas"></canvas>
           </div>
           <p class="hint" id="qrPreviewHint" style="text-align:center;margin-top:8px"></p>
         </div>
@@ -402,12 +421,14 @@
               <div class="hub" id="playSpin">GIRAR</div>
             </div>
             <p class="muted" style="font-size:12.5px" id="playHelp">Completá tus datos para habilitar la ruleta</p>
-            <div class="qr-block hidden" id="playQr">
-              <div class="qr-card-img"><canvas id="playQrCanvas" class="qr-canvas"></canvas></div>
-              <div class="qr-caption" id="playQrCaption"></div>
-            </div>
           </div>
         </div>
+      </div>
+
+      <!-- QR separado, debajo de la ruleta (totem) -->
+      <div class="qr-block hidden" id="playQr">
+        <canvas id="playQrCanvas" class="qr-canvas"></canvas>
+        <div class="qr-caption" id="playQrCaption"></div>
       </div>
     </div>
   </section>
@@ -856,7 +877,7 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
     try { qr = qrcode(0, "M"); qr.addData(text); qr.make(); }
     catch (e) { ctx.clearRect(0, 0, canvas.width, canvas.height); return false; }
     var count = qr.getModuleCount();
-    var quiet = 4, cell = 6;
+    var quiet = 4, cell = 10;
     var size = (count + quiet * 2) * cell;
     canvas.width = size; canvas.height = size;
     ctx.fillStyle = "#ffffff"; ctx.fillRect(0, 0, size, size);
