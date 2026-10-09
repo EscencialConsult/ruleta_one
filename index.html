@@ -369,7 +369,7 @@
           <label>URL del QR</label>
           <input type="text" id="qrUrl" placeholder="https://tu-link.com" />
           <label>Texto debajo del QR (opcional)</label>
-          <input type="text" id="qrCaption" placeholder="Escaneá para más información" />
+          <input type="text" id="qrCaption" placeholder="Escanea y completa los pasos para retirar tu premio" />
           <div class="qr-admin-preview" id="qrAdminPreview">
             <canvas id="qrPreviewCanvas" class="qr-canvas"></canvas>
           </div>
@@ -524,11 +524,17 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
       ],
       qrEnabled: false,
       qrUrl: "",
-      qrCaption: "Escaneá para más información",
+      qrCaption: "Escanea y completa los pasos para retirar tu premio",
       published: false
     };
   }
-  function withDefaults(cfg) { return Object.assign(defaultConfig(), cfg || {}); }
+  function withDefaults(cfg) {
+    var c = Object.assign(defaultConfig(), cfg || {});
+    // Migración: las ruletas que usaban el texto de QR por defecto anterior pasan al nuevo.
+    // No pisa textos personalizados (solo si coincide exactamente con el viejo default).
+    if (c.qrCaption === "Escaneá para más información") c.qrCaption = defaultConfig().qrCaption;
+    return c;
+  }
   function genId() { return "r" + Date.now().toString(36) + Math.floor(Math.random() * 46656).toString(36); }
 
   // Estado
